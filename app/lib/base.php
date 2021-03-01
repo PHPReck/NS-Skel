@@ -10,6 +10,7 @@
 namespace app\lib;
 
 use Core\Factory;
+use Core\Lib\App;
 use Core\Lib\IOUnit;
 use Ext\libCache;
 use Ext\libConfGet;
@@ -79,19 +80,19 @@ class base extends Factory
     public function __construct()
     {
         //判断环境设置
-        if (is_file($env_file = realpath(SYSROOT . '/../conf/.env'))) {
+        if (is_file($env_file = realpath(App::new()->root_path . '/conf/.env'))) {
             $env = trim(file_get_contents($env_file));
 
-            if (is_file($conf_file = realpath(SYSROOT . '/../conf/' . $env . '.conf'))) {
+            if (is_file($conf_file = realpath(App::new()->root_path . '/conf/' . $env . '.conf'))) {
                 $this->env = &$env;
             }
         }
 
         //加载配置
-        $this->conf = libConfGet::new('config')->load($this->env);
+        $this->conf = libConfGet::new('conf')->load($this->env);
 
         //加载错误码
-        $this->error = libErrno::new('app/lib/msg')->load('error');
+        $this->error = libErrno::new('app/msg')->load('code');
 
         //初始化配置
         self::init();

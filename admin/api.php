@@ -20,7 +20,4 @@ require __DIR__ . '/../../NervSys/NS.php';
     //设置输出格式为"application/json; charset=utf-8"
     ->setContentType('application/json');
 
-//Define system root path
-define('SYSROOT', dirname(__DIR__));
-
 NS::new();

@@ -120,6 +120,15 @@ class model extends libMySQL
         }
     }
 
+    /**
+     * 获取单条数据
+     *
+     * @param string $fields
+     * @param array  $where
+     * @param int    $fetch_style
+     *
+     * @return array
+     */
     public function get_info(string $fields, array $where, int $fetch_style = \PDO::FETCH_ASSOC)
     {
         return $this->select($fields)->where($where)->getRow($fetch_style);

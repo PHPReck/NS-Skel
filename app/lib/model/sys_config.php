@@ -15,5 +15,10 @@ use app\lib\model;
 class sys_config extends model
 {
 
+    public function get_cnt(array $where)
+    {
+        return $this->select('count(config_id)')->where($where)->getRow(\PDO::FETCH_COLUMN)[0];
+    }
+
 
 }
