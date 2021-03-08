@@ -13,7 +13,7 @@ namespace app\lib;
 use Core\Lib\IOUnit;
 use Ext\libLog;
 
-class verify extends base
+class verify extends errno
 {
     const ADMIN_KEY = '';
     const WEB_KEY   = '';
@@ -25,9 +25,10 @@ class verify extends base
 
     public function check(int $check_type): void
     {
-        $data_pack = IOUnit::new()->src_input;
+        $ioUnit = IOUnit::new();
+        $data_pack = $ioUnit->src_input;
 
-        if (in_array($data_pack['c'], self::ESCAPE_CMD)) return;
+        if (in_array($ioUnit->src_cmd, self::ESCAPE_CMD)) return;
 
         //检查签名参数
         if (!isset($data_pack['u'])

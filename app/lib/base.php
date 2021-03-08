@@ -63,16 +63,9 @@ class base extends Factory
     public $env = 'prod';
 
     /**
-     * @var \Core\Factory|\Ext\libErrno $error
-     */
-    public $error;
-
-    /**
      * @var \Core\Factory|\Ext\libConfGet $conf
      */
     public $conf;
-
-    public $img_host;
 
     /**
      * base constructor.
@@ -91,14 +84,8 @@ class base extends Factory
         //加载配置
         $this->conf = libConfGet::new('conf')->load($this->env);
 
-        //加载错误码
-        $this->error = libErrno::new('app/msg')->load('code');
-
         //初始化配置
         self::init();
-
-        //默认操作成功，具体状态码在业务中修改
-        $this->error->set(10010, 0);
 
     }
 
@@ -130,19 +117,6 @@ class base extends Factory
             $key .= $pattern[mt_rand(0, 62)]; //生成php随机数
         }
         return $key;
-    }
-
-    /**
-     * 失败返回
-     *
-     * @param int    $code
-     * @param string $msg
-     */
-    public function fail(int $code, string $msg = '')
-    {
-        $this->error->set($code, 1, $msg);
-        IOUnit::new()->output();
-        exit(0);
     }
 
 }

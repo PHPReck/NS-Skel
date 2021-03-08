@@ -20,7 +20,7 @@ use Core\Lib\IOUnit;
  *
  * @package app\lib
  */
-class api extends base
+class api extends errno
 {
     public $tz = '*';
 
@@ -28,7 +28,7 @@ class api extends base
 
     public $check_token = true;
 
-    public $check_type;
+    public $check_type = 0;
 
     public $check_sign = true;
 
@@ -45,6 +45,9 @@ class api extends base
      * @var \Core\Factory|\Core\Lib\IOUnit $ioUnit
      */
     public $ioUnit;
+
+    public $img_host;
+
 
     /**
      * api constructor.
@@ -103,29 +106,29 @@ class api extends base
         }
         $lock_res = $this->lock->on($cmd . ":" . $token_app);
         if (!$lock_res) {
-            $this->fail('10014');
+            $this->fail(10014);
         }
         return true;
+    }
+
+    public function get_img_host()
+    {
+        $img_setting = $this->img_setting();
+        if (empty($img_setting)) $this->img_host = $this->conf->use('img')['host'];
+        else {
+            if ($img_setting['default'] == 'local') $this->img_host = $this->conf->use('img')['host'];
+            else $this->img_host = $img_setting[$img_setting['default']]['domain'] ?? "";
+        }
     }
 
     public function img_setting()
     {
         $storage = $this->redis->get('setting:storage');
         if (empty($storage)) {
-            $storage = sys_config::new()->config_info('storage');
+            //$storage = sys_config::new()->config_info('storage');
             if (empty($storage)) $storage = '{}';
         }
         return json_decode($storage, true);
-    }
-
-    public function get_img_host()
-    {
-        $img_setting = $this->img_setting();
-        if (empty($img_setting)) $this->img_host = $this->conf->use('host');
-        else {
-            if ($img_setting['default'] == 'local') $this->img_host = conf::get('img_host')['host'];
-            else $this->img_host = $img_setting[$img_setting['default']]['domain'] ?? "";
-        }
     }
 
     public function get_user(string $token)
